@@ -1,8 +1,10 @@
 {
-  "name": "my-app",
+  "name": "stellar-simple-wallet",
+  "description": "A simple Stellar wallet",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.7.0",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
@@ -10,23 +12,49 @@
     "@types/node": "^12.20.37",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
+    "@types/react-router-dom": "^5.3.2",
+    "emotion-normalize": "^11.0.1",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.1.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-normalize": "^0.4.4",
+    "react-router-dom": "^6.0.2",
     "react-scripts": "4.0.3",
+    "stellar-sdk": "^9.1.0",
     "typescript": "^4.5.2",
     "web-vitals": "^1.1.2"
+  },
+  "devDependencies": {
+    "cypress": "^9.1.0",
+    "eslint-config-prettier": "^8.3.0",
+    "prettier": "2.5.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "test:ui:dev": "./node_modules/.bin/cypress open",
+    "prettier:check": "./node_modules/.bin/prettier --check \"src/**/*.{js,jsx,ts,tsx,json}\"",
+    "prettier:fix": "./node_modules/.bin/prettier --write \"src/**/*.{js,jsx,ts,tsx,json}\""
   },
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
+      "react-app/jest",
+      "prettier"
     ]
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,json}": [
+      "prettier --write"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "browserslist": {
     "production": [
