@@ -1,10 +1,11 @@
-import GlobalStyles from '../emotion/GlobalStyles';
+import Wallet from './Wallet';
+import { NotificationProvider } from '../contexts/notification/NotificationContext';
 
 const App = () => {
   return (
-    <GlobalStyles>
-      <h1 data-cy="welcome-message">Hello World</h1>
-    </GlobalStyles>
+    <NotificationProvider>
+      <Wallet />
+    </NotificationProvider>
   );
 };
 
