@@ -96,7 +96,7 @@ interface MakePaymentFormContainerProps {
     amount: string,
     destination: string,
     pincode: string
-  ) => void;
+  ) => Promise<void>;
   onClose: () => void;
 }
 
@@ -112,14 +112,18 @@ const MakePaymentFormContainer: FC<MakePaymentFormContainerProps> = ({
 }) => {
   const handleSubmit = async (
     values: FormValues,
-    { setSubmitting }: FormikHelpers<FormValues>
+    { setErrors }: FormikHelpers<FormValues>
   ) => {
-    await makePaymentCallback(
-      String(values.amount),
-      values.destination,
-      values.pincode
-    );
-    onClose();
+    try {
+      await makePaymentCallback(
+        String(values.amount),
+        values.destination,
+        values.pincode
+      );
+      onClose();
+    } catch (error: any) {
+      setErrors(error.errors);
+    }
   };
 
   const handleCancel: MouseEventHandler<HTMLButtonElement> = () => {

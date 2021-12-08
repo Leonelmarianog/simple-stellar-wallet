@@ -93,11 +93,16 @@ const RequirePincodeFormContainer: FC<RequirePincodeContainerProps> = ({
 }) => {
   const handleSubmit = (
     values: FormValues,
-    { setSubmitting }: FormikHelpers<FormValues>
+    { setErrors, setSubmitting }: FormikHelpers<FormValues>
   ) => {
-    actionCallback(values.pincode);
-    setSubmitting(false);
-    onClose();
+    try {
+      actionCallback(values.pincode);
+      setSubmitting(false);
+      onClose();
+    } catch (error: any) {
+      setSubmitting(false);
+      setErrors(error.errors);
+    }
   };
 
   const handleCancel: MouseEventHandler<HTMLButtonElement> = () => {

@@ -15,6 +15,9 @@ import MakePaymentForm from './MakePaymentForm';
 import Modal from '@mui/material/Modal';
 import useDisclosure from '../hooks/useDisclosure';
 import useNotificationContext from '../contexts/notification/useNotificationContext';
+import FormValidationException from '../exceptions/FormValidationException';
+import * as encryptionExceptions from '../utils/exceptions/encryption';
+import * as stellarExceptions from '../utils/exceptions/stellar';
 
 interface CreateAccountModalWithTriggerProps {
   createAccountCallback: (pincode: string) => Promise<void>;
@@ -174,7 +177,7 @@ interface MakePaymentModalWithTriggerProps {
     amount: string,
     destination: string,
     pincode: string
-  ) => void;
+  ) => Promise<void>;
 }
 
 const MakePaymentModalWithTrigger: FC<MakePaymentModalWithTriggerProps> = ({
@@ -336,6 +339,17 @@ const Wallet: FC = () => {
         message: 'Payment success',
       });
     } catch (error: any) {
+      if (stellarExceptions.isDestinationException(error)) {
+        throw new FormValidationException({
+          destination:
+            "Account doesn't exist. Remember that Stellar Accounts must be funded before existing on the ledger.",
+        });
+      }
+
+      if (encryptionExceptions.isPasswordException(error)) {
+        throw new FormValidationException({ pincode: 'Invalid Pincode' });
+      }
+
       notify({
         key: 'CREATE_PAYMENT_ERROR',
         severity: 'error',
@@ -377,11 +391,14 @@ const Wallet: FC = () => {
         message: 'Copied to clipboard.',
       });
     } catch (error: any) {
+      if (encryptionExceptions.isPasswordException(error)) {
+        throw new FormValidationException({ pincode: 'Invalid Pincode' });
+      }
+
       notify({
-        key: 'copy-secret-feedback',
-        open: true,
+        key: 'COPY_SECRET_FAILURE',
         severity: 'error',
-        message: 'Invalid pincode.',
+        message: 'Oops, something went wrong, sorry for the inconvenience',
       });
     }
   };
