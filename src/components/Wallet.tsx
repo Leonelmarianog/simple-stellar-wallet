@@ -1,19 +1,23 @@
 import { FC, useEffect, useState } from 'react';
-import StellarSdk from 'stellar-sdk';
+import { ServerApi } from 'stellar-sdk';
 import sjcl from 'sjcl';
+import JSONPretty from 'react-json-pretty';
+import monikaiTheme from 'react-json-pretty/themes/monikai.css';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import * as storage from '../services/storage/storage';
+import * as stellar from '../services/stellar/stellar';
 import CreateAccountForm from './CreateAccountForm';
 import RequirePincodeForm from './RequirePincodeForm';
+import MakePaymentForm from './MakePaymentForm';
 import Modal from '@mui/material/Modal';
 import useDisclosure from '../hooks/useDisclosure';
 import useNotificationContext from '../contexts/notification/useNotificationContext';
 
 interface CreateAccountModalWithTriggerProps {
-  createAccountCallback: (pincode: string) => void;
+  createAccountCallback: (pincode: string) => Promise<void>;
 }
 
 const CreateAccountModalWithTrigger: FC<CreateAccountModalWithTriggerProps> = ({
@@ -107,10 +111,18 @@ const SignOutModalWithTrigger: FC<SignOutModalWithTriggerProps> = ({
             </Typography>
 
             <Stack direction="row" spacing={2}>
-              <Button variant="contained" onClick={() => signOutCallback()} data-cy="sign-out-submit">
+              <Button
+                variant="contained"
+                onClick={() => signOutCallback()}
+                data-cy="sign-out-submit"
+              >
                 OK
               </Button>
-              <Button variant="contained" onClick={onClose} data-cy="sign-out-cancel">
+              <Button
+                variant="contained"
+                onClick={onClose}
+                data-cy="sign-out-cancel"
+              >
                 Cancel
               </Button>
             </Stack>
@@ -139,6 +151,59 @@ const CopyAddressTrigger: FC<CopyAddressTriggerProps> = ({
   );
 };
 
+interface UpdateAccountTriggerProps {
+  updateAccountCallback: () => void;
+}
+
+const UpdateAccountTrigger: FC<UpdateAccountTriggerProps> = ({
+  updateAccountCallback,
+}) => {
+  return (
+    <Button
+      variant="contained"
+      onClick={updateAccountCallback}
+      data-cy="update-account-button"
+    >
+      Update Account
+    </Button>
+  );
+};
+
+interface MakePaymentModalWithTriggerProps {
+  makePaymentCallback: (
+    amount: string,
+    destination: string,
+    pincode: string
+  ) => void;
+}
+
+const MakePaymentModalWithTrigger: FC<MakePaymentModalWithTriggerProps> = ({
+  makePaymentCallback,
+}) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  return (
+    <Box>
+      <Button
+        variant="contained"
+        onClick={onOpen}
+        data-cy="make-payment-button"
+      >
+        Make Payment
+      </Button>
+
+      <Modal open={isOpen} onClose={onClose}>
+        <div>
+          <MakePaymentForm
+            makePaymentCallback={makePaymentCallback}
+            onClose={onClose}
+          />
+        </div>
+      </Modal>
+    </Box>
+  );
+};
+
 const WalletHeading: FC = () => (
   <Typography variant="h1" sx={{ fontSize: '2.5rem' }} data-cy="wallet-heading">
     Stellar Wallet
@@ -161,27 +226,40 @@ const WalletAccountData: FC<WalletAccountDataProps> = ({ account }) => (
 interface StellarAccount {
   publicKey: string;
   secretKey: string;
+  state?: ServerApi.AccountRecord;
+}
+
+interface WalletLoading {
+  account?: boolean;
+  fund?: boolean;
+  pay?: boolean;
+  update?: boolean;
 }
 
 const Wallet: FC = () => {
   const [account, setAccount] = useState<StellarAccount | null>(null);
-  const [isLoadingAccountFromStorage, setIsLoadingAccountFromStorage] =
-    useState<boolean>(true);
+  const [loading, setLoading] = useState<WalletLoading>({
+    account: true,
+    fund: false,
+    pay: false,
+    update: false,
+  });
   const { notify } = useNotificationContext();
 
   useEffect(() => {
-    const getAccountFromStorage = () => {
+    const getAccountFromStorage = async () => {
       try {
-        let encryptedData = storage.get('account');
+        let encodedAccount = storage.get('account');
 
-        if (encryptedData) {
-          const account: StellarAccount = JSON.parse(atob(encryptedData));
-          setAccount(account);
+        if (encodedAccount) {
+          const account: StellarAccount = JSON.parse(atob(encodedAccount));
+          const accountState = await stellar.getAccountState(account.publicKey);
+          setAccount({ ...account, state: accountState });
         }
 
-        setIsLoadingAccountFromStorage(false);
+        setLoading((prevLoading) => ({ ...prevLoading, account: false }));
       } catch (error: any) {
-        setIsLoadingAccountFromStorage(false);
+        setLoading((prevLoading) => ({ ...prevLoading, account: false }));
         notify({
           key: 'account-storage-loading-feedback',
           severity: 'error',
@@ -193,23 +271,23 @@ const Wallet: FC = () => {
     getAccountFromStorage();
   }, [notify]);
 
-  const createAccount = (pincode: string) => {
+  const createAccount: (pincode: string) => Promise<void> = async (pincode) => {
     try {
-      const keypair = StellarSdk.Keypair.random();
-      const publicKey: string = keypair.publicKey();
-      const secretKey: string = JSON.stringify(
-        sjcl.encrypt(pincode, keypair.secret())
+      const account: StellarAccount = await stellar.createAccount();
+      account.secretKey = JSON.stringify(
+        sjcl.encrypt(pincode, account.secretKey)
       );
 
-      const account: StellarAccount = {
-        publicKey,
-        secretKey,
-      };
+      const encodedAccount = btoa(
+        JSON.stringify({
+          publicKey: account.publicKey,
+          secretKey: account.secretKey,
+        })
+      );
 
-      storage.set('account', btoa(JSON.stringify(account)));
+      storage.set('account', encodedAccount);
 
       setAccount(account);
-
       notify({
         key: 'create-account-feedback',
         severity: 'success',
@@ -220,6 +298,48 @@ const Wallet: FC = () => {
         key: 'create-account-feedback',
         severity: 'error',
         message: 'An error ocurred while trying to process this action.',
+      });
+    }
+  };
+
+  const updateAccount = async () => {
+    try {
+      setLoading((prevLoading) => ({ ...prevLoading, update: true }));
+      const accountState = await stellar.getAccountState(account!.publicKey);
+      setAccount({ ...account!, state: accountState });
+      setLoading((prevLoading) => ({ ...prevLoading, update: false }));
+    } catch (error: any) {
+      notify({
+        key: 'UPDATE_ACCOUNT_ERROR',
+        severity: 'error',
+        message: 'An error ocurred while trying to process this action',
+      });
+    }
+  };
+
+  const makePayment = async (
+    amount: string,
+    destination: string,
+    pincode: string
+  ) => {
+    try {
+      const secretKey: string = sjcl.decrypt(
+        pincode,
+        JSON.parse(account!.secretKey)
+      );
+
+      await stellar.makePayment(amount, destination, secretKey);
+
+      notify({
+        key: 'CREATE_PAYMENT_SUCCESS',
+        severity: 'success',
+        message: 'Payment success',
+      });
+    } catch (error: any) {
+      notify({
+        key: 'CREATE_PAYMENT_ERROR',
+        severity: 'error',
+        message: 'An error ocurred while trying to process this action',
       });
     }
   };
@@ -287,11 +407,11 @@ const Wallet: FC = () => {
 
   return (
     <Box>
-      {isLoadingAccountFromStorage && (
+      {loading.account && (
         <Typography data-cy="loading-feedback">Loading...</Typography>
       )}
 
-      {!isLoadingAccountFromStorage && !account ? (
+      {!loading.account && !account ? (
         <CreateAccountModalWithTrigger createAccountCallback={createAccount} />
       ) : null}
 
@@ -304,9 +424,21 @@ const Wallet: FC = () => {
             <Stack direction="row" spacing={2}>
               <CopyAddressTrigger copyAddressCallback={copyAddress} />
               <CopySecretModalWithTrigger copySecretCallback={copySecret} />
+              <UpdateAccountTrigger updateAccountCallback={updateAccount} />
+              <MakePaymentModalWithTrigger makePaymentCallback={makePayment} />
               <SignOutModalWithTrigger signOutCallback={signOut} />
             </Stack>
           </Stack>
+
+          {loading.update ? (
+            <Typography data-cy="loading-feedback">Loading...</Typography>
+          ) : (
+            <JSONPretty
+              data={account.state}
+              theme={monikaiTheme}
+              data-cy="account-state"
+            ></JSONPretty>
+          )}
         </Box>
       ) : null}
     </Box>

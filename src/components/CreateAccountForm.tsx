@@ -1,5 +1,5 @@
 import { FC, MouseEventHandler } from 'react';
-import { Formik, Form, useFormikContext, FormikHelpers } from 'formik';
+import { Formik, Form, useFormikContext } from 'formik';
 import * as Yup from 'yup';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
@@ -86,7 +86,7 @@ const CreateAccountForm: FC<CreateAccountFormProps> = ({ handleCancel }) => {
 };
 
 interface CreateAccountFormContainerProps {
-  createAccountCallback: (pincode: string) => void;
+  createAccountCallback: (pincode: string) => Promise<void>;
   onClose: () => void;
 }
 
@@ -99,12 +99,8 @@ const CreateAccountFormContainer: FC<CreateAccountFormContainerProps> = ({
   createAccountCallback,
   onClose,
 }) => {
-  const handleSubmit = (
-    values: FormValues,
-    { setSubmitting }: FormikHelpers<FormValues>
-  ) => {
-    createAccountCallback(values.pincode);
-    setSubmitting(false);
+  const handleSubmit = async (values: FormValues) => {
+    await createAccountCallback(values.pincode);
     onClose();
   };
 
