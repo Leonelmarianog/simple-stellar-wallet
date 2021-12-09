@@ -264,7 +264,7 @@ const Wallet: FC = () => {
       } catch (error: any) {
         setLoading((prevLoading) => ({ ...prevLoading, account: false }));
         notify({
-          key: 'account-storage-loading-feedback',
+          key: 'LOAD_ACCOUNT_FROM_STORAGE_FAILURE',
           severity: 'error',
           message: 'Could not access account information.',
         });
@@ -292,13 +292,13 @@ const Wallet: FC = () => {
 
       setAccount(account);
       notify({
-        key: 'create-account-feedback',
+        key: 'CREATE_ACCOUNT_SUCCESS',
         severity: 'success',
         message: 'Account created.',
       });
     } catch (error: any) {
       notify({
-        key: 'create-account-feedback',
+        key: 'CREATE_ACCOUNT_FAILURE',
         severity: 'error',
         message: 'An error ocurred while trying to process this action.',
       });
@@ -313,7 +313,7 @@ const Wallet: FC = () => {
       setLoading((prevLoading) => ({ ...prevLoading, update: false }));
     } catch (error: any) {
       notify({
-        key: 'UPDATE_ACCOUNT_ERROR',
+        key: 'UPDATE_ACCOUNT_FAILURE',
         severity: 'error',
         message: 'An error ocurred while trying to process this action',
       });
@@ -334,7 +334,7 @@ const Wallet: FC = () => {
       await stellar.makePayment(amount, destination, secretKey);
 
       notify({
-        key: 'CREATE_PAYMENT_SUCCESS',
+        key: 'MAKE_PAYMENT_SUCCESS',
         severity: 'success',
         message: 'Payment success',
       });
@@ -351,7 +351,7 @@ const Wallet: FC = () => {
       }
 
       notify({
-        key: 'CREATE_PAYMENT_ERROR',
+        key: 'MAKE_PAYMENT_FAILURE',
         severity: 'error',
         message: 'An error ocurred while trying to process this action',
       });
@@ -363,13 +363,13 @@ const Wallet: FC = () => {
       navigator.clipboard.writeText(account!.publicKey);
 
       notify({
-        key: 'copy-address-feedback',
+        key: 'COPY_ADDRESS_SUCCESS',
         severity: 'info',
         message: 'Copied to clipboard.',
       });
     } catch (error: any) {
       notify({
-        key: 'copy-address-feedback',
+        key: 'COPY_ADDRESS_FAILURE',
         severity: 'error',
         message: 'An error ocurred while trying to process this action.',
       });
@@ -386,7 +386,7 @@ const Wallet: FC = () => {
       navigator.clipboard.writeText(secretKey);
 
       notify({
-        key: 'copy-secret-feedback',
+        key: 'COPY_SECRET_SUCCESS',
         severity: 'info',
         message: 'Copied to clipboard.',
       });
@@ -408,14 +408,14 @@ const Wallet: FC = () => {
       storage.remove('account');
       setAccount(null);
       notify({
-        key: 'sign-out-feedback',
+        key: 'SIGN_OUT_SUCCESS',
         open: true,
         severity: 'success',
         message: 'Signed out.',
       });
     } catch (error: any) {
       notify({
-        key: 'sign-out-feedback',
+        key: 'SIGN_OUT_FAILURE',
         severity: 'error',
         message: 'An error ocurred while trying to process this action.',
       });
