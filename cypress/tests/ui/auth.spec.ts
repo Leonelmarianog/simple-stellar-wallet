@@ -86,7 +86,7 @@ describe('Account creation, sign in and sign out', () => {
 
     cy.createStellarAccount(pincode, pincode);
 
-    cy.getByDataTestAttribute('copy-secret').click();
+    cy.getByDataTestAttribute('copy-secret-button').click();
 
     cy.getByDataTestAttribute('require-pincode-form-pincode')
       .find('input')
@@ -102,5 +102,14 @@ describe('Account creation, sign in and sign out', () => {
     cy.getByDataTestAttribute('require-pincode-form-submit').should(
       'be.enabled'
     );
+
+    cy.getByDataTestAttribute('require-pincode-form-pincode').type(
+      pincode + '123'
+    );
+    cy.getByDataTestAttribute('require-pincode-form-submit').should(
+      'be.enabled'
+    );
+    cy.getByDataTestAttribute('require-pincode-form-submit').click();
+    cy.get('#pincode-helper-text').should('have.text', 'Invalid pincode');
   });
 });

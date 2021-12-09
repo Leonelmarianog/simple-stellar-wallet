@@ -351,7 +351,7 @@ const Wallet: FC = () => {
       }
 
       if (encryptionExceptions.isPasswordException(error)) {
-        throw new FormValidationException({ pincode: 'Invalid Pincode' });
+        throw new FormValidationException({ pincode: 'Invalid pincode' });
       }
 
       notify({
@@ -396,7 +396,7 @@ const Wallet: FC = () => {
       });
     } catch (error: any) {
       if (encryptionExceptions.isPasswordException(error)) {
-        throw new FormValidationException({ pincode: 'Invalid Pincode' });
+        throw new FormValidationException({ pincode: 'Invalid pincode' });
       }
 
       notify({
