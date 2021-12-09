@@ -4,7 +4,7 @@ describe('wallet', () => {
 
     cy.createStellarAccount(pincode, pincode);
     cy.getByDataTestAttribute('copy-address').click();
-    cy.getByDataTestAttribute('notificator-copy-address-feedback').should(
+    cy.getByDataTestAttribute('notificator-copy-address-success').should(
       'have.text',
       'Copied to clipboard'
     );
@@ -17,7 +17,7 @@ describe('wallet', () => {
     cy.getByDataTestAttribute('copy-secret').click();
     cy.getByDataTestAttribute('require-pincode-pincode').type(pincode);
     cy.getByDataTestAttribute('require-pincode-submit').click();
-    cy.getByDataTestAttribute('notificator-copy-secret-feedback').should(
+    cy.getByDataTestAttribute('notificator-copy-secret-success').should(
       'have.text',
       'Copied to clipboard'
     );
@@ -32,7 +32,7 @@ describe('wallet', () => {
 
     cy.getByDataTestAttribute('require-pincode-pincode').type(pincodeConfirm);
     cy.getByDataTestAttribute('require-pincode-submit').click();
-    cy.getByDataTestAttribute('notificator-copy-secret-feedback').should(
+    cy.getByDataTestAttribute('notificator-copy-secret-failure').should(
       'have.text',
       'Invalid pincode'
     );

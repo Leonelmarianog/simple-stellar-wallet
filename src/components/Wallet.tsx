@@ -264,7 +264,7 @@ const Wallet: FC = () => {
       } catch (error: any) {
         setLoading((prevLoading) => ({ ...prevLoading, account: false }));
         notify({
-          key: 'LOAD_ACCOUNT_FROM_STORAGE_FAILURE',
+          key: 'load-account-from-storage-failure',
           severity: 'error',
           message: 'Could not access account information',
         });
@@ -292,13 +292,13 @@ const Wallet: FC = () => {
 
       setAccount(account);
       notify({
-        key: 'CREATE_ACCOUNT_SUCCESS',
+        key: 'create-account-success',
         severity: 'success',
         message: 'Account created',
       });
     } catch (error: any) {
       notify({
-        key: 'CREATE_ACCOUNT_FAILURE',
+        key: 'create-account-failure',
         severity: 'error',
         message: 'Oops, something went wrong, sorry for the inconvenience',
       });
@@ -313,7 +313,7 @@ const Wallet: FC = () => {
       setLoading((prevLoading) => ({ ...prevLoading, update: false }));
     } catch (error: any) {
       notify({
-        key: 'UPDATE_ACCOUNT_FAILURE',
+        key: 'update-account-failure',
         severity: 'error',
         message: 'Oops, something went wrong, sorry for the inconvenience',
       });
@@ -334,7 +334,7 @@ const Wallet: FC = () => {
       await stellar.makePayment(amount, destination, secretKey);
 
       notify({
-        key: 'MAKE_PAYMENT_SUCCESS',
+        key: 'make-payment-success',
         severity: 'success',
         message: 'Payment success',
       });
@@ -351,7 +351,7 @@ const Wallet: FC = () => {
       }
 
       notify({
-        key: 'MAKE_PAYMENT_FAILURE',
+        key: 'make-payment-failure',
         severity: 'error',
         message: 'Oops, something went wrong, sorry for the inconvenience',
       });
@@ -363,13 +363,13 @@ const Wallet: FC = () => {
       navigator.clipboard.writeText(account!.publicKey);
 
       notify({
-        key: 'COPY_ADDRESS_SUCCESS',
+        key: 'copy-address-success',
         severity: 'info',
         message: 'Copied to clipboard',
       });
     } catch (error: any) {
       notify({
-        key: 'COPY_ADDRESS_FAILURE',
+        key: 'copy-address-failure',
         severity: 'error',
         message: 'Oops, something went wrong, sorry for the inconvenience',
       });
@@ -386,7 +386,7 @@ const Wallet: FC = () => {
       navigator.clipboard.writeText(secretKey);
 
       notify({
-        key: 'COPY_SECRET_SUCCESS',
+        key: 'copy-secret-success',
         severity: 'info',
         message: 'Copied to clipboard',
       });
@@ -396,7 +396,7 @@ const Wallet: FC = () => {
       }
 
       notify({
-        key: 'COPY_SECRET_FAILURE',
+        key: 'copy-secret-failure',
         severity: 'error',
         message: 'Oops, something went wrong, sorry for the inconvenience',
       });
@@ -408,14 +408,14 @@ const Wallet: FC = () => {
       storage.remove('account');
       setAccount(null);
       notify({
-        key: 'SIGN_OUT_SUCCESS',
+        key: 'sign-out-success',
         open: true,
         severity: 'success',
         message: 'Successfully signed out',
       });
     } catch (error: any) {
       notify({
-        key: 'SIGN_OUT_FAILURE',
+        key: 'sign-out-failure',
         severity: 'error',
         message: 'Oops, something went wrong, sorry for the inconvenience',
       });
