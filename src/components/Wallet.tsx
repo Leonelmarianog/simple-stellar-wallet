@@ -266,7 +266,7 @@ const Wallet: FC = () => {
         notify({
           key: 'LOAD_ACCOUNT_FROM_STORAGE_FAILURE',
           severity: 'error',
-          message: 'Could not access account information.',
+          message: 'Could not access account information',
         });
       }
     };
@@ -294,13 +294,13 @@ const Wallet: FC = () => {
       notify({
         key: 'CREATE_ACCOUNT_SUCCESS',
         severity: 'success',
-        message: 'Account created.',
+        message: 'Account created',
       });
     } catch (error: any) {
       notify({
         key: 'CREATE_ACCOUNT_FAILURE',
         severity: 'error',
-        message: 'An error ocurred while trying to process this action.',
+        message: 'Oops, something went wrong, sorry for the inconvenience',
       });
     }
   };
@@ -315,7 +315,7 @@ const Wallet: FC = () => {
       notify({
         key: 'UPDATE_ACCOUNT_FAILURE',
         severity: 'error',
-        message: 'An error ocurred while trying to process this action',
+        message: 'Oops, something went wrong, sorry for the inconvenience',
       });
     }
   };
@@ -353,7 +353,7 @@ const Wallet: FC = () => {
       notify({
         key: 'MAKE_PAYMENT_FAILURE',
         severity: 'error',
-        message: 'An error ocurred while trying to process this action',
+        message: 'Oops, something went wrong, sorry for the inconvenience',
       });
     }
   };
@@ -365,13 +365,13 @@ const Wallet: FC = () => {
       notify({
         key: 'COPY_ADDRESS_SUCCESS',
         severity: 'info',
-        message: 'Copied to clipboard.',
+        message: 'Copied to clipboard',
       });
     } catch (error: any) {
       notify({
         key: 'COPY_ADDRESS_FAILURE',
         severity: 'error',
-        message: 'An error ocurred while trying to process this action.',
+        message: 'Oops, something went wrong, sorry for the inconvenience',
       });
     }
   };
@@ -388,7 +388,7 @@ const Wallet: FC = () => {
       notify({
         key: 'COPY_SECRET_SUCCESS',
         severity: 'info',
-        message: 'Copied to clipboard.',
+        message: 'Copied to clipboard',
       });
     } catch (error: any) {
       if (encryptionExceptions.isPasswordException(error)) {
@@ -411,13 +411,13 @@ const Wallet: FC = () => {
         key: 'SIGN_OUT_SUCCESS',
         open: true,
         severity: 'success',
-        message: 'Signed out.',
+        message: 'Successfully signed out',
       });
     } catch (error: any) {
       notify({
         key: 'SIGN_OUT_FAILURE',
         severity: 'error',
-        message: 'An error ocurred while trying to process this action.',
+        message: 'Oops, something went wrong, sorry for the inconvenience',
       });
     }
   };

@@ -6,7 +6,7 @@ describe('wallet', () => {
     cy.getByDataTestAttribute('copy-address').click();
     cy.getByDataTestAttribute('notificator-copy-address-feedback').should(
       'have.text',
-      'Copied to clipboard.'
+      'Copied to clipboard'
     );
   });
 
@@ -19,7 +19,7 @@ describe('wallet', () => {
     cy.getByDataTestAttribute('require-pincode-submit').click();
     cy.getByDataTestAttribute('notificator-copy-secret-feedback').should(
       'have.text',
-      'Copied to clipboard.'
+      'Copied to clipboard'
     );
   });
 
@@ -34,7 +34,7 @@ describe('wallet', () => {
     cy.getByDataTestAttribute('require-pincode-submit').click();
     cy.getByDataTestAttribute('notificator-copy-secret-feedback').should(
       'have.text',
-      'Invalid pincode.'
+      'Invalid pincode'
     );
   });
 });
