@@ -38,7 +38,7 @@ const RequirePincode: FC<RequirePincodeProps> = ({ handleCancel }) => {
           <Typography
             variant="h1"
             sx={headingStyles}
-            data-cy="require-pincode-heading"
+            data-cy="require-pincode-form-heading"
           >
             Enter Pincode to proceed with this action
           </Typography>
@@ -50,7 +50,7 @@ const RequirePincode: FC<RequirePincodeProps> = ({ handleCancel }) => {
                 name="pincode"
                 placeholder="Enter Pincode"
                 required
-                dataCy="require-pincode-pincode"
+                dataCy="require-pincode-form-pincode"
               />
             </Stack>
 
@@ -59,14 +59,14 @@ const RequirePincode: FC<RequirePincodeProps> = ({ handleCancel }) => {
                 type="submit"
                 variant="contained"
                 disabled={!(dirty && isValid)}
-                data-cy="require-pincode-submit"
+                data-cy="require-pincode-form-submit"
               >
                 {isSubmitting ? 'Submitting...' : 'Submit'}
               </Button>
               <Button
                 variant="contained"
                 onClick={handleCancel}
-                data-cy="require-pincode-cancel"
+                data-cy="require-pincode-form-cancel"
               >
                 Cancel
               </Button>

@@ -1,7 +1,7 @@
 describe('Account creation, sign in and sign out', () => {
   it('should redirect unauthenticated users to the account creation page', () => {
     cy.visit('/');
-    cy.getByDataTestAttribute('create-account').should('be.visible');
+    cy.getByDataTestAttribute('create-account-button').should('be.visible');
   });
 
   it('should redirect users to the wallet page after sign up', () => {
@@ -27,25 +27,29 @@ describe('Account creation, sign in and sign out', () => {
     cy.getByDataTestAttribute('wallet').should('be.visible');
     cy.signOut();
     cy.getByDataTestAttribute('wallet').should('not.exist');
-    cy.getByDataTestAttribute('create-account').should('be.visible');
+    cy.getByDataTestAttribute('create-account-button').should('be.visible');
   });
 
   it('should validate "CreateAccountForm"', () => {
     cy.visit('/');
-    cy.getByDataTestAttribute('create-account').click();
+    cy.getByDataTestAttribute('create-account-button').click();
 
-    cy.getByDataTestAttribute('create-account-pincode')
+    cy.getByDataTestAttribute('create-account-form-pincode')
       .find('input')
       .focus()
       .blur();
     cy.get('#pincode-helper-text').should('have.text', 'Pincode required');
-    cy.getByDataTestAttribute('create-account-submit').should('be.disabled');
+    cy.getByDataTestAttribute('create-account-form-submit').should(
+      'be.disabled'
+    );
 
-    cy.getByDataTestAttribute('create-account-pincode').type('123456');
+    cy.getByDataTestAttribute('create-account-form-pincode').type('123456');
     cy.get('#pincode-helper-text').should('not.exist');
-    cy.getByDataTestAttribute('create-account-submit').should('be.disabled');
+    cy.getByDataTestAttribute('create-account-form-submit').should(
+      'be.disabled'
+    );
 
-    cy.getByDataTestAttribute('create-account-pincode-confirm')
+    cy.getByDataTestAttribute('create-account-form-pincode-confirm')
       .find('input')
       .focus()
       .blur();
@@ -53,20 +57,28 @@ describe('Account creation, sign in and sign out', () => {
       'have.text',
       'Must confirm pincode'
     );
-    cy.getByDataTestAttribute('create-account-submit').should('be.disabled');
+    cy.getByDataTestAttribute('create-account-form-submit').should(
+      'be.disabled'
+    );
 
-    cy.getByDataTestAttribute('create-account-pincode-confirm').type('1234567');
+    cy.getByDataTestAttribute('create-account-form-pincode-confirm').type(
+      '1234567'
+    );
     cy.get('#pincodeConfirm-helper-text').should(
       'have.text',
       'Pincode does not match'
     );
-    cy.getByDataTestAttribute('create-account-submit').should('be.disabled');
+    cy.getByDataTestAttribute('create-account-form-submit').should(
+      'be.disabled'
+    );
 
-    cy.getByDataTestAttribute('create-account-pincode-confirm')
+    cy.getByDataTestAttribute('create-account-form-pincode-confirm')
       .clear()
       .type('123456');
     cy.get('#pincodeConfirm-helper-text').should('not.exist');
-    cy.getByDataTestAttribute('create-account-submit').should('be.enabled');
+    cy.getByDataTestAttribute('create-account-form-submit').should(
+      'be.enabled'
+    );
   });
 
   it('should validate "RequirePincodeForm"', () => {
@@ -76,15 +88,19 @@ describe('Account creation, sign in and sign out', () => {
 
     cy.getByDataTestAttribute('copy-secret').click();
 
-    cy.getByDataTestAttribute('require-pincode-pincode')
+    cy.getByDataTestAttribute('require-pincode-form-pincode')
       .find('input')
       .focus()
       .blur();
     cy.get('#pincode-helper-text').should('have.text', 'Pincode required');
-    cy.getByDataTestAttribute('require-pincode-submit').should('be.disabled');
+    cy.getByDataTestAttribute('require-pincode-form-submit').should(
+      'be.disabled'
+    );
 
-    cy.getByDataTestAttribute('require-pincode-pincode').type(pincode);
+    cy.getByDataTestAttribute('require-pincode-form-pincode').type(pincode);
     cy.get('#pincode-helper-text').should('not.exist');
-    cy.getByDataTestAttribute('require-pincode-submit').should('be.enabled');
+    cy.getByDataTestAttribute('require-pincode-form-submit').should(
+      'be.enabled'
+    );
   });
 });

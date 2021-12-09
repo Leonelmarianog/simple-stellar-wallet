@@ -30,7 +30,11 @@ const CreateAccountModalWithTrigger: FC<CreateAccountModalWithTriggerProps> = ({
 
   return (
     <Box>
-      <Button variant="contained" onClick={onOpen} data-cy="create-account">
+      <Button
+        variant="contained"
+        onClick={onOpen}
+        data-cy="create-account-button"
+      >
         Create Account
       </Button>
 
@@ -57,7 +61,7 @@ const CopySecretModalWithTrigger: FC<CopySecretModalWithTriggerProps> = ({
 
   return (
     <Box>
-      <Button variant="contained" onClick={onOpen} data-cy="copy-secret">
+      <Button variant="contained" onClick={onOpen} data-cy="copy-secret-button">
         Copy Secret
       </Button>
 
@@ -97,7 +101,7 @@ const SignOutModalWithTrigger: FC<SignOutModalWithTriggerProps> = ({
 
   return (
     <>
-      <Button variant="contained" onClick={onOpen} data-cy="sign-out">
+      <Button variant="contained" onClick={onOpen} data-cy="sign-out-button">
         Sign Out
       </Button>
 
@@ -117,14 +121,14 @@ const SignOutModalWithTrigger: FC<SignOutModalWithTriggerProps> = ({
               <Button
                 variant="contained"
                 onClick={() => signOutCallback()}
-                data-cy="sign-out-submit"
+                data-cy="sign-out-submit-button"
               >
                 OK
               </Button>
               <Button
                 variant="contained"
                 onClick={onClose}
-                data-cy="sign-out-cancel"
+                data-cy="sign-out-cancel-button"
               >
                 Cancel
               </Button>
@@ -147,7 +151,7 @@ const CopyAddressTrigger: FC<CopyAddressTriggerProps> = ({
     <Button
       variant="contained"
       onClick={copyAddressCallback}
-      data-cy="copy-address"
+      data-cy="copy-address-button"
     >
       Copy Address
     </Button>
@@ -425,7 +429,9 @@ const Wallet: FC = () => {
   return (
     <Box>
       {loading.account && (
-        <Typography data-cy="loading-feedback">Loading...</Typography>
+        <Typography data-cy="account-load-loading-message">
+          Loading...
+        </Typography>
       )}
 
       {!loading.account && !account ? (
@@ -448,7 +454,9 @@ const Wallet: FC = () => {
           </Stack>
 
           {loading.update ? (
-            <Typography data-cy="loading-feedback">Loading...</Typography>
+            <Typography data-cy="account-state-update-loading-message">
+              Loading...
+            </Typography>
           ) : (
             <JSONPretty
               data={account.state}

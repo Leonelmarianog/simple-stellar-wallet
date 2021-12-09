@@ -38,7 +38,7 @@ const CreateAccountForm: FC<CreateAccountFormProps> = ({ handleCancel }) => {
           <Typography
             variant="h1"
             sx={headingStyles}
-            data-cy="create-account-heading"
+            data-cy="create-account-form-heading"
           >
             Account Creation
           </Typography>
@@ -50,14 +50,14 @@ const CreateAccountForm: FC<CreateAccountFormProps> = ({ handleCancel }) => {
                 name="pincode"
                 placeholder="Enter Pincode"
                 required
-                dataCy="create-account-pincode"
+                dataCy="create-account-form-pincode"
               />
               <PasswordInput
                 label="Confirm Pincode"
                 name="pincodeConfirm"
                 placeholder="Confirm Pincode"
                 required
-                dataCy="create-account-pincode-confirm"
+                dataCy="create-account-form-pincode-confirm"
               />
             </Stack>
 
@@ -66,14 +66,14 @@ const CreateAccountForm: FC<CreateAccountFormProps> = ({ handleCancel }) => {
                 type="submit"
                 variant="contained"
                 disabled={!(dirty && isValid)}
-                data-cy="create-account-submit"
+                data-cy="create-account-form-submit"
               >
                 {isSubmitting ? 'Submitting...' : 'Submit'}
               </Button>
               <Button
                 variant="contained"
                 onClick={handleCancel}
-                data-cy="create-account-cancel"
+                data-cy="create-account-form-cancel"
               >
                 Cancel
               </Button>
