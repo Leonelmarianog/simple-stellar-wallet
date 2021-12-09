@@ -1,46 +1,31 @@
-# Getting Started with Create React App
+# Simple Stellar Wallet
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Very basic React implementation of a Non-Custodial "Wallet" based on Stellar Docs "Building an App" section ([LINK](https://developers.stellar.org/docs/building-apps/)).
 
-## Available Scripts
+# Actions
 
-In the project directory, you can run:
+1. Create Account # Creates a test Stellar Account with a balance of 10000 XLM.
 
-### `npm start`
+2. Make Payment # Make a payment to another account.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+3. Copy Address # Copy account's public key to the browser's clipboard.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+4. Copy Secret # Copy account's secret key to the browser's clipboard.
 
-### `npm test`
+5. Sign out # Sign out of the application (deletes test account from browser's local storage).
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+# App Flow
 
-### `npm run build`
+1. To create a test account, users are required to enter a _pincode_. This pincode is used to encrypt the secret key of the account once it is created. Since this is just for learning purposes, this pincode can be any string of characters. The account is automatically funded on creation, making it accessable through the Stellar Ledger and allowing the user to make payments right away.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+2. The secret key of the account is encrypted and stored in localStorage. This allows the app to automatically sign in again every time the user refreshes the page.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. For certain actions, as a means of security, the user is asked to enter the pincode again via a modal. Only if the pincode matches the one used for encryption, the user will be able to perform the requested action.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# Tests
 
-### `npm run eject`
+Tested with Cypress.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+npm run test:ui:dev
+```
