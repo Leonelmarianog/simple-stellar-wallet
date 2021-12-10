@@ -65,7 +65,7 @@ const CreateAccountForm: FC<CreateAccountFormProps> = ({ handleCancel }) => {
               <Button
                 type="submit"
                 variant="contained"
-                disabled={!(dirty && isValid)}
+                disabled={!(dirty && isValid) || isSubmitting}
                 data-cy="create-account-form-submit"
               >
                 {isSubmitting ? 'Submitting...' : 'Submit'}

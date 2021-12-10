@@ -58,7 +58,7 @@ const RequirePincode: FC<RequirePincodeProps> = ({ handleCancel }) => {
               <Button
                 type="submit"
                 variant="contained"
-                disabled={!(dirty && isValid)}
+                disabled={!(dirty && isValid) || isSubmitting}
                 data-cy="require-pincode-form-submit"
               >
                 {isSubmitting ? 'Submitting...' : 'Submit'}
