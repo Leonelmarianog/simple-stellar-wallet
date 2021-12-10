@@ -31,6 +31,8 @@ describe('Account creation, sign in and sign out', () => {
   });
 
   it('should validate "CreateAccountForm"', () => {
+    const pincode = '123456';
+
     cy.visit('/');
     cy.getByDataTestAttribute('create-account-button').click();
 
@@ -43,7 +45,7 @@ describe('Account creation, sign in and sign out', () => {
       'be.disabled'
     );
 
-    cy.getByDataTestAttribute('create-account-form-pincode').type('123456');
+    cy.getByDataTestAttribute('create-account-form-pincode').type(pincode);
     cy.get('#pincode-helper-text').should('not.exist');
     cy.getByDataTestAttribute('create-account-form-submit').should(
       'be.disabled'
@@ -62,7 +64,7 @@ describe('Account creation, sign in and sign out', () => {
     );
 
     cy.getByDataTestAttribute('create-account-form-pincode-confirm').type(
-      '1234567'
+      pincode + '123'
     );
     cy.get('#pincodeConfirm-helper-text').should(
       'have.text',
@@ -74,10 +76,14 @@ describe('Account creation, sign in and sign out', () => {
 
     cy.getByDataTestAttribute('create-account-form-pincode-confirm')
       .clear()
-      .type('123456');
+      .type(pincode);
     cy.get('#pincodeConfirm-helper-text').should('not.exist');
     cy.getByDataTestAttribute('create-account-form-submit').should(
       'be.enabled'
+    );
+    cy.getByDataTestAttribute('create-account-form-submit').click();
+    cy.getByDataTestAttribute('create-account-form-submit').should(
+      'be.disabled'
     );
   });
 
@@ -111,5 +117,8 @@ describe('Account creation, sign in and sign out', () => {
     );
     cy.getByDataTestAttribute('require-pincode-form-submit').click();
     cy.get('#pincode-helper-text').should('have.text', 'Invalid pincode');
+    cy.getByDataTestAttribute('require-pincode-form-submit').should(
+      'be.disabled'
+    );
   });
 });

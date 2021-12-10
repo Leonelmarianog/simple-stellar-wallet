@@ -3,7 +3,7 @@ describe('wallet', () => {
     const pincode = '123456';
 
     cy.createStellarAccount(pincode, pincode);
-    cy.getByDataTestAttribute('copy-address').click();
+    cy.getByDataTestAttribute('copy-address-button').click();
     cy.getByDataTestAttribute('notificator-copy-address-success').should(
       'have.text',
       'Copied to clipboard'
@@ -14,9 +14,9 @@ describe('wallet', () => {
     const pincode = '123456';
 
     cy.createStellarAccount(pincode, pincode);
-    cy.getByDataTestAttribute('copy-secret').click();
-    cy.getByDataTestAttribute('require-pincode-pincode').type(pincode);
-    cy.getByDataTestAttribute('require-pincode-submit').click();
+    cy.getByDataTestAttribute('copy-secret-button').click();
+    cy.getByDataTestAttribute('require-pincode-form-pincode').type(pincode);
+    cy.getByDataTestAttribute('require-pincode-form-submit').click();
     cy.getByDataTestAttribute('notificator-copy-secret-success').should(
       'have.text',
       'Copied to clipboard'
@@ -28,13 +28,14 @@ describe('wallet', () => {
     const pincodeConfirm = '456123';
 
     cy.createStellarAccount(pincode, pincode);
-    cy.getByDataTestAttribute('copy-secret').click();
-
-    cy.getByDataTestAttribute('require-pincode-pincode').type(pincodeConfirm);
-    cy.getByDataTestAttribute('require-pincode-submit').click();
-    cy.getByDataTestAttribute('notificator-copy-secret-failure').should(
-      'have.text',
-      'Invalid pincode'
+    cy.getByDataTestAttribute('copy-secret-button').click();
+    cy.getByDataTestAttribute('require-pincode-form-pincode').type(
+      pincodeConfirm
+    );
+    cy.getByDataTestAttribute('require-pincode-form-submit').click();
+    cy.get('#pincode-helper-text').should('have.text', 'Invalid pincode');
+    cy.getByDataTestAttribute('require-pincode-form-submit').should(
+      'be.disabled'
     );
   });
 });
